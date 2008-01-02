@@ -14,6 +14,7 @@ URL:		http://homepages.paradise.net.nz/henryj/code/index.html#FTGL
 Source:		http://opengl.geek.nz/ftgl/%{name}-%{version}.tar.bz2
 Patch0:		%{name}-2.0.11-pkgconfig.patch
 Patch1:         ftgl-2.1.2-gcc4.patch
+Buildroot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 BuildRequires:	freetype2-devel
 BuildRequires:	MesaGLU-devel
 BuildRequires:	doxygen
