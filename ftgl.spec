@@ -1,8 +1,9 @@
 %define	version	2.1.2
-%define release	%mkrel 2
+%define release	%mkrel 3
 
 %define major	0
 %define libname %mklibname %{name} %{major}
+%define develname %mklibname %{name} -d
 
 Summary:	OpenGL Interface of Freetype2
 Name:		ftgl
@@ -60,14 +61,15 @@ Rendering modes supported are:
      * Polygon meshes
      * Extruded polygon meshes
 
-%package -n	%{libname}-devel
+%package -n	%{develname}
 Summary:	Development related files of FTGL
 Group:		Development/C
 Provides:	%{name}-devel = %{version}-%{release}
 Provides:	lib%{name}-devel = %{version}-%{release}
 Requires:	%{libname} = %{version}-%{release}
+Obsoletes:	%{_lib}%{name}0-devel
 
-%description -n	%{libname}-devel
+%description -n	%{develname}
 This package contains headers and static libraries of FTGL.
 You need to install it if you want to develop or compile
 any programs that make use of OpenGL interface of freetype
@@ -115,7 +117,7 @@ rm -rf %{buildroot}
 %doc *.txt
 %{_libdir}/libftgl.so.%{major}*
 
-%files -n %{libname}-devel
+%files -n %{develname}
 %defattr(-,root,root)
 %doc unix/docs/html unix/README.txt
 %{_includedir}/*
