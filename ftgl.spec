@@ -1,20 +1,28 @@
-%define	version	2.1.2
-%define release	%mkrel 3
+%define pre	rc5
+%define rel	1
 
-%define major	0
-%define libname %mklibname %{name} %{major}
-%define develname %mklibname %{name} -d
+%if %pre
+%define release		%mkrel 0.%{pre}.%{rel}
+%define distname	%{name}-%{version}-%{pre}.tar.bz2
+%define dirname		%{name}-%{version}~%{pre}
+%else
+%define release		%mkrel %{rel}
+%define distname	%{name}-%{version}.tar.bz2
+%define dirname		%{name}-%{version}
+%endif
 
-Summary:	OpenGL Interface of Freetype2
+%define major		2
+%define libname		%mklibname %{name} %{major}
+%define develname	%mklibname %{name} -d
+
+Summary:	Font rendering library for OpenGL applications
 Name:		ftgl
-Version:	%{version}
+Version:	2.1.3
 Release:	%{release}
-License:	LGPL
-Group:		System/Fonts/True type
-URL:		http://homepages.paradise.net.nz/henryj/code/index.html#FTGL
-Source:		http://opengl.geek.nz/ftgl/%{name}-%{version}.tar.bz2
-Patch0:		%{name}-2.0.11-pkgconfig.patch
-Patch1:         ftgl-2.1.2-gcc4.patch
+License:	MIT
+Group:		System/Libraries
+URL:		http://ftgl.wiki.sourceforge.net/
+Source0:	http://downloads.sourceforge.net/%{name}/%{distname}
 Buildroot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 BuildRequires:	freetype2-devel
 BuildRequires:	MesaGLU-devel
@@ -36,7 +44,6 @@ Rendering modes supported are:
      * Outlines
      * Polygon meshes
      * Extruded polygon meshes
-
 
 %package -n	%{libname}
 Summary:	OpenGL Interface of Freetype2
@@ -76,23 +83,15 @@ any programs that make use of OpenGL interface of freetype
 library.
 
 %prep
-%setup -q -n FTGL
-%patch0 -p1 -b .pkgconfig
-%patch1 -p1 -b .gcc
+%setup -q -n %{dirname}
 find -type f -name '*.txt' -print0 | xargs -0 -r chmod 0644
-cd unix
-libtoolize --force
-aclocal
-autoconf
 
 %build
-cd unix
 %configure2_5x --enable-shared
 %make
 
 %install
 rm -rf %{buildroot}
-cd unix
 %makeinstall
 
 # include doc ourselves, don't let software do it
@@ -114,16 +113,14 @@ rm -rf %{buildroot}
 
 %files -n %{libname}
 %defattr(-,root,root)
-%doc *.txt
 %{_libdir}/libftgl.so.%{major}*
 
 %files -n %{develname}
 %defattr(-,root,root)
-%doc unix/docs/html unix/README.txt
+%doc AUTHORS BUGS NEWS README TODO
 %{_includedir}/*
 %{_libdir}/lib*.so
 %{_libdir}/lib*.a
 %{_libdir}/lib*.la
 %{_libdir}/pkgconfig/*.pc
-
 
