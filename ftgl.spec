@@ -1,5 +1,5 @@
 %define pre	rc5
-%define rel	3
+%define rel	4
 
 %if %pre
 %define release		%mkrel 0.%{pre}.%{rel}
