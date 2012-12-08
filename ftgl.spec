@@ -1,15 +1,7 @@
 %define pre	rc5
-%define rel	5
 
-%if %pre
-%define release		%mkrel 0.%{pre}.%{rel}
 %define distname	%{name}-%{version}-%{pre}.tar.bz2
-%define dirname		%{name}-%{version}~%{pre}
-%else
-%define release		%mkrel %{rel}
-%define distname	%{name}-%{version}.tar.bz2
-%define dirname		%{name}-%{version}
-%endif
+%define dname		%{name}-%{version}~%{pre}
 
 %define major		2
 %define libname		%mklibname %{name} %{major}
@@ -18,14 +10,13 @@
 Summary:	Font rendering library for OpenGL applications
 Name:		ftgl
 Version:	2.1.3
-Release:	%{release}
+Release:	0.%{pre}.9
 License:	MIT
 Group:		System/Libraries
 URL:		http://ftgl.wiki.sourceforge.net/
 Source0:	http://downloads.sourceforge.net/%{name}/%{distname}
-Buildroot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
-BuildRequires:	freetype2-devel
-BuildRequires:	MesaGLU-devel
+BuildRequires:	pkgconfig(freetype2)
+BuildRequires:	pkgconfig(glu)
 BuildRequires:	doxygen
 
 %description
@@ -74,7 +65,6 @@ Group:		Development/C
 Provides:	%{name}-devel = %{version}-%{release}
 Provides:	lib%{name}-devel = %{version}-%{release}
 Requires:	%{libname} = %{version}-%{release}
-Obsoletes:	%{_lib}%{name}0-devel
 
 %description -n	%{develname}
 This package contains headers and static libraries of FTGL.
@@ -83,44 +73,106 @@ any programs that make use of OpenGL interface of freetype
 library.
 
 %prep
-%setup -q -n %{dirname}
-find -type f -name '*.txt' -print0 | xargs -0 -r chmod 0644
+%setup -q -n %{dname}
+find -type f -name '*.txt' -print0 | xargs -0 -r %__chmod 0644
 
 %build
-%configure2_5x --enable-shared
+%configure2_5x --enable-shared --disable-static
 %make
 
 %install
-rm -rf %{buildroot}
 %makeinstall
 
 # include doc ourselves, don't let software do it
-rm -rf %{buildroot}%{_docdir}
+%__rm -rf %{buildroot}%{_docdir}
 
 # remove files not bundled
-rm -f %{buildroot}%{_bindir}/FTGLDemo
-rmdir %{buildroot}%{_bindir} || true
+%__rm -f %{buildroot}%{_bindir}/FTGLDemo
+%__rmdir %{buildroot}%{_bindir} || true
 
-%if %mdkversion < 200900
-%post -n %{libname} -p /sbin/ldconfig
-%endif
-%if %mdkversion < 200900
-%postun -n %{libname} -p /sbin/ldconfig
-%endif
-
-%clean
-rm -rf %{buildroot}
 
 %files -n %{libname}
-%defattr(-,root,root)
 %{_libdir}/libftgl.so.%{major}*
 
 %files -n %{develname}
-%defattr(-,root,root)
 %doc AUTHORS BUGS NEWS README TODO
 %{_includedir}/*
 %{_libdir}/lib*.so
-%{_libdir}/lib*.a
-%{_libdir}/lib*.la
 %{_libdir}/pkgconfig/*.pc
+
+%changelog
+* Tue Apr 10 2012 Andrey Bondrov <andrey.bondrov@rosalab.ru> 2.1.3-0.rc5.8mdv2011.0
+- Don't use %%dirname macro which seems to be reserved in RPM5
+
+* Tue May 03 2011 Oden Eriksson <oeriksson@mandriva.com> 2.1.3-0.rc5.5mdv2011.0
++ Revision: 664394
+- mass rebuild
+
+* Thu Dec 02 2010 Oden Eriksson <oeriksson@mandriva.com> 2.1.3-0.rc5.4mdv2011.0
++ Revision: 605218
+- rebuild
+
+* Wed Mar 17 2010 Oden Eriksson <oeriksson@mandriva.com> 2.1.3-0.rc5.3mdv2010.1
++ Revision: 522675
+- rebuilt for 2010.1
+
+* Wed Sep 02 2009 Christophe Fergeau <cfergeau@mandriva.com> 2.1.3-0.rc5.2mdv2010.0
++ Revision: 424483
+- rebuild
+
+* Tue Dec 09 2008 Adam Williamson <awilliamson@mandriva.org> 2.1.3-0.rc5.1mdv2009.1
++ Revision: 312109
+- new major 2
+- fix doc file list
+- no more unix/ subdir for build, no need to re-gen build scripts any more
+- drop all patches (no longer needed)
+- correct license
+- update URLs
+- bump to 2.1.3rc5 (for chromium, and fixes a bunch of stuff anyway)
+- add infrastructure for pre-release builds
+- drop useless defines
+
+* Sun Sep 07 2008 Emmanuel Andry <eandry@mandriva.org> 2.1.2-3mdv2009.0
++ Revision: 282375
+- apply devel policy
+
+* Tue Jun 17 2008 Thierry Vignaud <tv@mandriva.org> 2.1.2-2mdv2009.0
++ Revision: 221006
+- rebuild
+
+  + Pixel <pixel@mandriva.com>
+    - do not call ldconfig in %%post/%%postun, it is now handled by filetriggers
+
+  + Olivier Blin <oblin@mandriva.com>
+    - restore BuildRoot
+
+* Mon Dec 17 2007 Thierry Vignaud <tv@mandriva.org> 2.1.2-1mdv2008.1
++ Revision: 125324
+- kill re-definition of %%buildroot on Pixel's request
+
+
+* Fri Jan 26 2007 Götz Waschk <waschk@mandriva.org> 2.1.2-1mdv2007.0
++ Revision: 113842
+- Import ftgl
+
+* Fri Jan 26 2007 Götz Waschk <waschk@mandriva.org> 2.1.2-1mdv2007.1
+- fix build
+- new version
+
+* Thu Aug 24 2006 Per Øyvind Karlsen <pkarlsen@mandriva.com> 2.0.11-5mdv2007.0
+- fix correct usage of %%mklibname
+
+* Wed Aug 23 2006 Per Øyvind Karlsen <pkarlsen@mandriva.com> 2.0.11-4mdv2007.0
+- rebuild for new xorg
+- %%mkrel
+
+* Sun Jan 08 2006 Mandriva Linux Team <http://www.mandrivaexpert.com/> 2.0.11-3mdk
+- Rebuild
+
+* Sun Nov 21 2004 Abel Cheung <deaddog@mandrake.org> 2.0.11-2mdk
+- Fix build (thx Stefan's bot)
+
+* Thu Nov 04 2004 Abel Cheung <deaddog@mandrake.org> 2.0.11-1mdk
+- First Mandrake package
+- Patch0: Patch .pc file to use freetype2.pc
 
