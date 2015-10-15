@@ -17,7 +17,6 @@ URL:		http://ftgl.wiki.sourceforge.net/
 Source0:	http://downloads.sourceforge.net/%{name}/%{distname}
 BuildRequires:	pkgconfig(freetype2)
 BuildRequires:	pkgconfig(glu)
-BuildRequires:	doxygen
 
 %description
 FTGL is a free, open source library to enable developers to use arbitrary
@@ -77,6 +76,8 @@ library.
 find -type f -name '*.txt' -print0 | xargs -0 -r %__chmod 0644
 
 %build
+export LIBS=-lm
+
 %configure2_5x --enable-shared --disable-static
 %make
 
