@@ -7,6 +7,9 @@
 %define libname		%mklibname %{name} %{major}
 %define develname	%mklibname %{name} -d
 
+%define _disable_lto 1
+%define _disable_rebuild_configure 1
+
 Summary:	Font rendering library for OpenGL applications
 Name:		ftgl
 Version:	2.1.3
