@@ -13,7 +13,7 @@
 Summary:	Font rendering library for OpenGL applications
 Name:		ftgl
 Version:	2.1.3
-Release:	0.%{pre}.10
+Release:	0.%{pre}.11
 License:	MIT
 Group:		System/Libraries
 URL:		http://ftgl.wiki.sourceforge.net/
