@@ -16,7 +16,7 @@ Version:	2.1.3
 Release:	0.%{pre}.11
 License:	MIT
 Group:		System/Libraries
-URL:		http://ftgl.wiki.sourceforge.net/
+URL:		https://ftgl.wiki.sourceforge.net/
 Source0:	http://downloads.sourceforge.net/%{name}/%{distname}
 BuildRequires:	pkgconfig(freetype2)
 BuildRequires:	pkgconfig(glu)
