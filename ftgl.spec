@@ -18,6 +18,11 @@ License:	MIT
 Group:		System/Libraries
 URL:		https://ftgl.wiki.sourceforge.net/
 Source0:	http://downloads.sourceforge.net/%{name}/%{distname}
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
+BuildRequires:	make
 BuildRequires:	pkgconfig(freetype2)
 BuildRequires:	pkgconfig(glu)
 
